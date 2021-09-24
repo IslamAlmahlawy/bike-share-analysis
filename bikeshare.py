@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 CITY_DATA = { 'chicago': 'chicago.csv',
-              'new york city': 'new_york_city.csv',
+              'new york': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
 def get_filters():
@@ -17,12 +17,60 @@ def get_filters():
     """
     print('Hello! Let\'s explore some US bikeshare data!')
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
+    while True:
+        city = input('Would you like to see data for Chicago, New York, or Washington? ').lower()
+        if city in (CITY_DATA.keys()):
+            break        
+        print('Invalid city name please choose value from the provided cities!')
 
-
+    
     # TO DO: get user input for month (all, january, february, ... , june)
+    while True:
+        filter = input("How do you want to filter the data (by month, day, both or none)? ").lower()
+        if filter in ['month', 'day', 'both', 'none']:
+            break
+        print("Invalid filter selected please choose a filter from the provided list")
 
+    month_filter_message = """
+    Please select a month to filter by providing just the number
+    1) January
+    2) February
+    3) March
+    4) April
+    5) May
+    6) June
+    """
+    if filter in ['month', 'both']:
+        while True:
+            month = input(month_filter_message)
+            if month.isnumeric() and int(month) <= 6:
+                month = int(month)
+                break
+            print(f'{month} is invalid please select a number from 1 to 6 for the month to filter with!')
+    else:
+        month = 'all'
 
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
+
+    day_filter_message = """
+    Please select a day to filter by providing just the number
+    1) Saturday
+    2) Sunday
+    3) Monday
+    4) Tuesday
+    5) Wednesday
+    6) Thursday
+    7) Friday
+    """
+    if filter in ['day', 'both']:
+        while True:
+            day = input(day_filter_message)
+            if day.isnumeric() and int(day) <= 7:
+                day = int(day)
+                break
+            print(f'{day} is invalid please select a number from 1 to 7 for the day to filter with!')
+    else:
+        day = 'all'
 
 
     print('-'*40)
@@ -40,7 +88,29 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
+    # get city file name
+    city_file = CITY_DATA[city]
 
+    # load the data in a pandas data frame
+    df = pd.read_csv(city_file)
+
+    # convert the Start Time column to datetime
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
+
+    # Add month and day columns to the dataframe
+    df['month'] = df['Start Time'].dt.month
+    df['day'] = df['Start Time'].dt.day
+
+
+    # check if we will filter with month or not
+    if month != 'all':
+        # filter by month 
+        df = df[df['month'] == month]
+
+    # check if we will filter with day or not
+    if day != 'all':
+        # filter by day 
+        df = df[df['day'] == day]
 
     return df
 
