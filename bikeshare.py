@@ -171,9 +171,19 @@ def trip_duration_stats(df):
     start_time = time.time()
 
     # TO DO: display total travel time
-
-
+    total_travel_duration = (pd.to_datetime(df['End Time']) - pd.to_datetime(df['Start Time'])).sum()
+    days =  total_travel_duration.days
+    hours, reminder = divmod(total_travel_duration.seconds, (60*60))
+    minutes, seconds = divmod(reminder , 60)
+    print(f'Total travel time is: {days} days {hours} hours {minutes} minutes {seconds} seconds')
     # TO DO: display mean travel time
+
+    # display mean travel time
+    average_travel_duration = (pd.to_datetime(df['End Time']) - pd.to_datetime(df['Start Time'])).mean()
+    days =  average_travel_duration.days
+    hours, reminder = divmod(average_travel_duration.seconds, (60*60))
+    minutes, seconds = divmod(reminder , 60)
+    print(f'Average travel time is: {hours} hours {minutes} minutes {seconds} seconds')
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
