@@ -54,18 +54,18 @@ def get_filters():
 
     day_filter_message = """
     Please select a day to filter by providing just the number
-    1) Saturday
-    2) Sunday
-    3) Monday
-    4) Tuesday
-    5) Wednesday
-    6) Thursday
-    7) Friday
+    0) Monday
+    1) Tuesday
+    2) Wednesday
+    3) Thursday
+    4) Friday
+    5) Saturday
+    6) Sunday
     """
     if filter in ['day', 'both']:
         while True:
             day = input(day_filter_message)
-            if day.isnumeric() and int(day) <= 7:
+            if day.isnumeric() and int(day) <= 6 and int(day) >= 0:
                 day = int(day)
                 break
             print(f'{day} is invalid please select a number from 1 to 7 for the day to filter with!')
@@ -99,7 +99,8 @@ def load_data(city, month, day):
 
     # Add month and day columns to the dataframe
     df['month'] = df['Start Time'].dt.month
-    df['day'] = df['Start Time'].dt.day
+    df['day'] = df['Start Time'].dt.dayofweek
+    df['day_of_week'] = df['Start Time'].dt.day_name()
 
 
     # check if we will filter with month or not
@@ -112,6 +113,7 @@ def load_data(city, month, day):
         # filter by day 
         df = df[df['day'] == day]
 
+    print(df)
     return df
 
 
@@ -122,14 +124,20 @@ def time_stats(df):
     start_time = time.time()
 
     # TO DO: display the most common month
+    months = ['January', 'February', 'March', 'April', 'May', 'June']
+    month = df.month.mode()[0]
+    print(f'The most common month is: {months[month-1]}')
 
-
-    # TO DO: display the most common day of week
-
+    # TO DO: display the most common day of week    
+    day = df['day_of_week'].mode()[0]
+    print(f'The most common day of week is: {day}')
 
     # TO DO: display the most common start hour
+    df['hour'] = df['Start Time'].dt.hour
+    hour = df['hour'].mode()[0]
+    print(f'The most common start hour is: {hour}')
 
-
+    print(df)
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
