@@ -113,7 +113,6 @@ def load_data(city, month, day):
         # filter by day 
         df = df[df['day'] == day]
 
-    print(df)
     return df
 
 
@@ -137,7 +136,6 @@ def time_stats(df):
     hour = df['hour'].mode()[0]
     print(f'The most common start hour is: {hour}')
 
-    print(df)
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
@@ -149,12 +147,17 @@ def station_stats(df):
     start_time = time.time()
 
     # TO DO: display most commonly used start station
-
+    start_station = df['Start Station'].mode()[0]
+    print(f'The most popular start station is: {start_station}')
 
     # TO DO: display most commonly used end station
+    end_station = df['End Station'].mode()[0]
+    print(f'The most popular end station is: {end_station}')
 
 
     # TO DO: display most frequent combination of start station and end station trip
+    trip = df['Start Station'] + ' - ' + df['End Station']
+    print(f'The most popular trip is: from {trip.mode()[0]}')
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
