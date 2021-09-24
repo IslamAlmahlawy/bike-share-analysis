@@ -197,17 +197,35 @@ def user_stats(df):
     start_time = time.time()
 
     # TO DO: Display counts of user types
-
+    print(df['User Type'].value_counts())
+    print('\n\n')
 
     # TO DO: Display counts of gender
-
+    if 'Gender' in(df.columns):
+        print(df['Gender'].value_counts())
+        print('\n\n')
 
     # TO DO: Display earliest, most recent, and most common year of birth
-
+    if 'Birth Year' in(df.columns):
+        year = df['Birth Year'].fillna(0).astype('int64')
+        print(f'Earliest birth year is: {year.min():.0f}')
+        print(f'most recent is: {year.max():.0f}')
+        print(f'and most comon birth year is: {year.mode()[0]:.0f}')
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def display_raw_data(df):
+    """Asks user if he wants to display raw data and prints 5 rows at time"""
+    raw = input('\nWould you like to diplay raw data?\n')
+    if raw.lower() == 'yes':
+        count = 0
+        while True:
+            print(df.iloc[count: count+5])
+            count += 5
+            ask = input('Display next 5 raws?')
+            if ask.lower() != 'yes':
+                break
 
 def main():
     while True:
@@ -218,6 +236,7 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+        display_raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
